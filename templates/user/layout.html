@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <![endif]-->
+    <title>Sistema Joshua Benitez Construcciones</title>
+    <!-- BOOTSTRAP CORE STYLE  -->
+    <link href="/static/assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FONT AWESOME STYLE  -->
+    <link href="/static/assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- CUSTOM STYLE  -->
+    <link href="/static/assets/css/style.css" rel="stylesheet" />
+    <!-- DATATABLE STYLE  -->
+    <link href="/static/assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <link rel="stylesheet" href="/static/css/confirmacion.css">
+    <!-- Confirmacion de mensajes -->
+    <link rel="stylesheet" href="/static/css/jquery-ui.css">
+    <link rel="stylesheet" href="/static/css/select2.min.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    <script src="/static/assets/js/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP SCRIPTS  -->
+    <script src="/static/assets/js/bootstrap.js"></script>
+    <script src="/static/assets/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <script src="/static/js/jquery-ui.js"></script>
+    <script src="/static/js/select2.min.js"></script>
+    <script src="/static/assets/js/custom.js"></script>
+    <script src="/static/js/sweetalert211.js"></script>
+    <script src="/static/js/timemensaje.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-inverse set-radius-zero">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="./in_stock">
+                    <img src="/static/assets/img/logo.jpg"  style="width: 60px;"/>
+                </a>
+            </div>
+            <div class="right-div">
+                <a href="{{ url_for('logout') }}" class="btn btn-primary pull-right">Salir</a>
+            </div>
+        </div>
+    </div>
+    <!-- LOGO HEADER END-->
+    <section class="menu-section">
+        <div class="container">
+            <div class="row ">
+                <div class="col-md-12">
+                    <div class="navbar-collapse collapse ">
+                        <ul id="menu-top" class="nav navbar-nav navbar-right">
+                            <li><a href="./in_stock">Ingresar Stock</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- MENU SECTION END-->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row pad-botm">
+                <div class="col-md-12">
+                    <h4 class="header-line">Modulo Usuario</h4>
+                </div>
+            </div>
+            {% block content %}
+
+            {% endblock %}            
+        </div>  
+    </div>       
+</body>
+</html>

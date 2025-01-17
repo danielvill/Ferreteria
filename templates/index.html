@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ingreso al sistema</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/static/img/icos.png" type="image/x-icon">
+    <style>
+        .alert-danger{
+    color:red;
+}
+    </style>
+</head>
+<body>
+    <main>
+        <article>
+            <section>
+                <form action="/index" method="POST">
+                    <h1>Inicia Sesion</h1>
+                    <input type="text" name="user" placeholder="Ingresa su usuario"><br />
+                    <input type="password" name="contraseña" placeholder="Ingresa su contraseña"><br />
+                    <button type="submit">Entrar</button>
+                    <button type="reset">Limpiar</button>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <div class="alert alert-danger">
+                        {{ messages[0] }}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </form>
+            </section>
+        </article>
+    </main>
+    <form method="post" action="/crear_backup">
+        <button type="submit" class="btn-primary">Respaldo de Base de datos</button>
+    </form>
+<script>
+    // Duracion del mensaje solo con javascritp para poder usar lo que es 
+window.onload = function () {
+    setTimeout(function () {
+        var alert = document.querySelector(".alert");
+        if (alert) alert.style.display = "none";
+    }, 5000); // 5000ms = 5s
+};
+</script>
+</body>
+</html>

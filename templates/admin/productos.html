@@ -1,0 +1,160 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form  action="/admin/reporte/re_vistacompleta" method="get">
+            <Label>Reporte de los Productos</Label>
+            <br>
+            <a href="{{ url_for('producto.re_vistacompleta') }}" class="btn btn-primary">Completo</a>
+        </form>
+        <br>
+        <table  class="table table-bordered table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre del producto</th>
+                    <th>Descripcion</th>
+                    <th>Cantidad</th>
+                    <th>Categoria</th>
+                    <th>Marca</th>
+                    <th>Color</th>
+                    <th>Medida</th>
+                    <th>CV</th>
+                    <th>PVP</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>
+                        {{producto.id_producto}}
+                    </td>
+
+                    <td>
+                        {{producto.n_producto}}
+                    </td>
+                    <td>
+                        {{producto.descripcion}}
+                    </td>
+                    <td>
+                        {{producto.cantidad}}
+                    </td>
+                    <td>
+                        {{producto.categoria}}
+                    </td>
+                    <td>
+                        {{producto.marca}}
+                    </td>
+                    <td>
+                        {{producto.color}}
+                    </td>
+                    <td>
+                        {{producto.medida}}
+                    </td>
+                    <td>
+                        {{producto.cv}}
+                    </td>
+                    <td>
+                        {{producto.pvp}}
+                    </td>
+                    <td>
+                        <button type="submit" class="editar btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>
+                        <a href="{{url_for('producto.delete_pro', eliadpro = producto.id_producto)}}"
+                            class="eliminar btn btn-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-x-octagon" viewBox="0 0 16 16">
+                                <path
+                                    d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />
+                                <path
+                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="editModal" title="Editar Productos">
+    <form id="editForm" action="" method="post">
+        <div class="form-group">
+            <div class="col">
+                <label for="usuario">Nombre del producto</label>
+                <input type="text" id="n_producto" name="n_producto" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Descripcion</label>
+                <input type="text" id="descripcion" name="descripcion" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Cantidad</label>
+                <input type="text" id="cantidad" name="cantidad" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Categoria</label>
+                <input type="text" id="categoria" name="categoria" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Marca</label>
+                <input type="text" id="marca" name="marca" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Color</label>
+                <input type="text" id="color" name="color" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">Medida</label>
+                <input type="text" id="medida" name="medida" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">CV</label>
+                <input type="text" id="cv" name="cv" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="rol">PVP</label>
+                <input type="text" id="pvp" name="pvp" class="form-control" required>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/js/admin/productos.js"></script>
+<script>
+    // Validacion si los campos estan vacios
+document.querySelector('form').onsubmit = function (e) {
+    var inputs = this.querySelectorAll('input');
+    var todosLlenos = true; // Asume que todos los campos están llenos
+
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].value === '') {
+            todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
+            break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
+        }
+    }
+
+    if (!todosLlenos) {
+        e.preventDefault(); // Previene el envío del formulario
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Campos estan vacios'
+        });
+    } 
+};
+</script>
+{% endblock %}

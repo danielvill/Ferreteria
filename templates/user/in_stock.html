@@ -1,0 +1,130 @@
+{% extends "user/layout.html" %}
+{% block content %}
+<div class="">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            Ingreso de Stock
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Seleccionar producto</label>
+            </div>
+            <table class="table table-bordered table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Codigo</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Selector</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td class="valor1">
+                            {{producto.n_producto}}
+                        </td>
+                        <td class="valor2">
+                            {{producto.id_producto}}
+                        </td>
+                        <td class="valor3">
+                            {{producto.cantidad}}
+                        </td>
+                        <td class="valor4">
+                            {{producto.pvp}}
+                        </td>
+                        <td>
+                            <button type="button">Seleccionar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <form action="/user/in_stock" method="post">
+                <div class="form-group">
+                    <label>Ingresar Fecha</label>
+                    <input class="form-control" type="date" name="fecha" id="fecha"  readonly/>
+                </div>
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Codigo </th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Ingresar Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    <input type="text" name="producto" class="form-control producto" readonly>
+                                </td>
+                                <td><input type="text" name="id_producto" class="form-control id_producto" readonly>
+                                </td>
+                                <td><input type="text" name="c_producto" class="form-control c_producto" readonly></td>
+                                <td>
+                                    <input type="text" name="precio" class="form-control pvp" readonly>
+                                </td>
+                                <td><input class="form-control cantidad" type="number" name="cantidad" id="cantidad" />
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <label for="">Total</label>
+                <input type="text" name="total" class="form-control total" readonly>
+                <label for="">Selecciona al usuario</label>
+                <input type="text" value="{{ usuario }}" name="usuario" class="form-control" readonly>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-info">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('#myTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        "pageLength": 2
+        
+    });
+    $(document).ready(function () {
+        $('#myTable tbody tr').each(function () {
+            var btn = $(this).find('button');
+            btn.click(function () {
+                var producto = $.trim($(this).closest('tr').find('.valor1').text());
+                var id_producto = $.trim($(this).closest('tr').find('.valor2').text());
+                var c_producto = $.trim($(this).closest('tr').find('.valor3').text());
+                var pvp = $.trim($(this).closest('tr').find('.valor4').text());
+
+                $('.producto').val(producto);
+                $('.id_producto').val(id_producto);
+                $('.c_producto').val(c_producto);
+                $('.pvp').val(pvp);
+
+                  // Pone el campo cantidad en blanco cada vez que se copia un nuevo producto
+            $('.cantidad').val("");
+            $('.total').val("");
+            });
+        });
+    });
+</script>
+<script src="/static/js/admin/in_stock.js"></script>
+<script src="/static/js/user/in_stock.js"></script>
+{% endblock %}

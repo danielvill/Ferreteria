@@ -1,0 +1,42 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+    <div class="">
+        <div class="panel panel-info">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger">
+                {{ messages[0] }}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div class="panel-heading">
+                Ingreso de Usuarios
+            </div>
+            <div class="panel-body">
+
+                <form action="/admin/in_usuario" method="post">
+                    <div class="form-group">
+                        <label>Ingresar cedula</label>
+                        <input class="form-control" type="number" name="cedula"  oninput="limitarEntrada()" name="cedula"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Usuario</label>
+                        <input class="form-control" type="text" name="user" />
+                        <p class="help-block">Nombre de usuario</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Correo</label>
+                        <input class="form-control" type="email" id="correo" name="correo" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Contraseña</label>
+                        <input class="form-control" type="password" name="contraseña" />
+                    </div>
+                    <button type="submit" class="btn btn-info">Enviar</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+<script src="/static/js/admin/in_usuario.js"></script>
+{% endblock %}

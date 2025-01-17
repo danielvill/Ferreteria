@@ -1,0 +1,6 @@
+/* Inlcuye todo los mensajes de confirmacion para cuando se envia a la base de datos */
+
+.alert-danger{
+    color:#eff2f5;
+    background-color: #3071A9;
+}

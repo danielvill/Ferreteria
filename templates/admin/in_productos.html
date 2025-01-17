@@ -1,0 +1,66 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+#pvp::before {
+    content: '$';
+    position: absolute;
+    margin-left: 5px;
+}
+</style>
+<div class="">
+    <div class="panel panel-info">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <div class="panel-heading">
+            Ingreso de Productos
+        </div>
+        <div class="panel-body" class="">
+            <form action="/admin/in_productos"  method="post" >
+                <div class="form-group">
+                    <label>Ingresar nombre del producto</label>
+                    <input class="form-control " type="text" name="n_producto" />
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Descripcion</label>
+                    <input class="form-control" type="text" name="descripcion"/>
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Cantidad</label>
+                    <input class="form-control" type="number" name="cantidad" />
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Categoria</label>
+                    <input class="form-control" type="text" name="categoria" />
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Marca</label>
+                    <input class="form-control" type="text" name="marca"/>
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Color</label>
+                    <input class="form-control" type="text" name="color"/>
+                </div>
+                <div class="form-group">
+                    <label>Ingresar Medida</label>
+                    <input class="form-control" type="text" name="medida"  id="medida"/>
+                </div>
+                <div class="form-group">
+                    <label>Ingresar CV</label>
+                    <input class="form-control" type="text" name="cv"/>
+                </div>
+                <div class="form-group">
+                    <label>Ingresar PVP</label>
+                    <input class="form-control" type="text" name="pvp" id="pvp" />
+                </div>
+                <button type="submit" class="btn btn-info">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/static/js/admin/in_productos.js"></script>
+{% endblock %}
