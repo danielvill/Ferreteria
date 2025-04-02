@@ -19,9 +19,16 @@ import os
 # ! Puntos para instalar pip install flask-paginate flask pymongo reportlab
 # ! Codigo para que se ejecute 
 
+# Codigos para que se ejecute el programa con el archivo es necesario que deba colocar para toda la pc
+
+
 db = dbase()
 app = Flask(__name__)
 app.secret_key = 'Ferre14526'
+
+
+
+
 
 # * Crear Backup de la base de datos 
 @app.route('/crear_backup', methods=['POST'])
@@ -96,6 +103,10 @@ def index():
     else:
         return render_template('index.html')
 
+
+
+
+
 #*Codigo de ingreso para usuarios admin/in_usuarios
 app.register_blueprint(usuarios)
 
@@ -106,6 +117,12 @@ app.register_blueprint(producto)
 app.register_blueprint(stock)
 
 app.register_blueprint(u_stock)
+
+
+
+
+
+
 
 # *Parte de Home visualizar todo del sistema 
 #* Tiene vista de stock de ventas diarias mensuales y anuales por usuario
