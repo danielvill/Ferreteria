@@ -1,0 +1,63 @@
+{% extends "user/layout.html" %}
+{% block content %}
+<div class="">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger">
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            Mis Préstamos
+        </div>
+        <div class="panel-body">
+            <!-- Tabla de stock -->
+            <table class="table table-bordered table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Código</th>
+                        <th>Cantidad</th>
+                        <th>Fecha</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th>Usuario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if stock_data %}
+                        {% for stock in stock_data %}
+                        <tr>
+                            <td>{{ stock.producto }}</td>
+                            <td>{{ stock.id_producto }}</td>
+                            <td>{{ stock.cantidad }}</td>
+                            <td>{{ stock.fecha }}</td>
+                            <td>{{ stock.precio }}</td>
+                            <td>{{ stock.total }}</td>
+                            <td>{{ stock.usuario }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7">No tienes préstamos registrados</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    // Inicialización de DataTables
+    $('#myTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+        },
+        "pageLength": 10 // Muestra 10 filas por página
+    });
+</script>
+<script src="/static/js/admin/in_prestamo.js"></script>
+<script src="/static/js/user/in_prestamo.js"></script>
+{% endblock %}
