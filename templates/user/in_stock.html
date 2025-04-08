@@ -88,7 +88,11 @@
                 <label for="">Total</label>
                 <input type="text" name="total" class="form-control total" readonly>
                 <label for="">Selecciona al usuario</label>
-                <input type="text" value="{{ usuario }}" name="usuario" class="form-control" readonly>
+                <select name="usuario" class="form-control">
+                    {% for user in usuarios %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>                
                 <br>
                 <br>
                 <button type="submit" class="btn btn-info">Enviar</button>

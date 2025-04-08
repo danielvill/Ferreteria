@@ -1,13 +1,28 @@
 $(document).ready(function () {
-    $('select').select2();
+    // Si ya existe una instancia de DataTables, la destruimos antes de inicializar
+    if ($.fn.DataTable.isDataTable('#myTable')) {
+        $('#myTable').DataTable().destroy();
+    }
+
+    $('#myTable').DataTable({
+        "language": {
+            "url": "/static/js/Spanish.json"
+        },
+        "pageLength": 2
+    });
 });
-$('#myTable').DataTable({
-    "language": {
-        "url": "/static/js/Spanish.json"
-    },
-    "pageLength": 2
+
+// $(document).ready(function () {
+//     $('select').select2();
+// });
+// $('#myTable').DataTable({
+//     "language": {
+//         "url": "/static/js/Spanish.json"
+//     },
+//     "pageLength": 2
     
-});
+// });
+
 // Validacion si los campos estan vacios
 document.querySelector('form').onsubmit = function (e) {
     var inputs = this.querySelectorAll('input');

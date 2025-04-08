@@ -61,7 +61,11 @@
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
-                            <li><a href="./in_stock">Prestamos</a></li>
+                            {% if rol == 'usuario' %}
+                                <li><a href="{{ url_for('in_prestamo_user') }}">Préstamos</a></li>
+                            {% elif rol == 'secretario' %}
+                                <li><a href="{{ url_for('u_stock.ustock') }}">Solicitar Préstamo</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -74,7 +78,13 @@
         <div class="container">
             <div class="row pad-botm">
                 <div class="col-md-12">
-                    <h4 class="header-line">Modulo Usuario</h4>
+                    <h4 class="header-line">
+                        {% if rol == 'secretario' %}
+                            MÓDULO SECRETARIO
+                        {% else %}
+                            MÓDULO USUARIO
+                        {% endif %}
+                    </h4>
                 </div>
             </div>
             {% block content %}
