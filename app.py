@@ -16,6 +16,10 @@ from routes.producto import producto
 from routes.stock import stock
 from routes.user.u_stock import u_stock
 import os
+from collections import defaultdict
+from datetime import datetime
+import locale
+
 
 db = dbase()
 app = Flask(__name__)
@@ -119,16 +123,109 @@ app.register_blueprint(u_stock)
 @app.route('/admin/home', methods=['GET', 'POST'])
 def home():
     if 'username' not in session:
-        flash("Inicia sesion con tu usuario y contraseña")
+        flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('index'))
-    productos = db['productos'].find()
+    
+    # Datos para mostrar en la home 
+    
+    # Establecer el idioma a español
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')  # Para sistemas Unix/Linux
+    
+    # Filtrar productos con cantidad menor a 10
+    productos_filtrados = list(db['productos'].find({'cantidad': {'$lt': 10}}))
+    cantidad_productos_menores = len(productos_filtrados)
+    total_productos = db['productos'].count_documents({})
+    
     usuarios = db['usuarios'].find()
-    stock = db['stock'].find()
-    stocki = db['stock'].find()
-    stop = db['stock'].find()
-    return render_template('/admin/home.html', productos=productos, usuarios=usuarios, stock=stock, stocki=stocki, stop=stop)
+    stock = list(db['stock'].find())  # Obtén todos los registros de la tabla stock
+    
+    # Calcular totales por mes
+    totales_por_mes = defaultdict(float)
+    cantidades_por_mes = defaultdict(int)
+    for item in stock:
+        fecha = datetime.strptime(item['fecha'], '%Y-%m-%d')
+        mes = fecha.strftime('%B %Y')
+        totales_por_mes[mes] += float(item['total'])
+        cantidades_por_mes[mes] += int(item['cantidad'])
+    
+    mes_mayor_total = max(totales_por_mes, key=totales_por_mes.get)
+    total_mayor = totales_por_mes[mes_mayor_total]
+    mes_menor_cantidad = min(cantidades_por_mes, key=cantidades_por_mes.get)
+    cantidad_menor = cantidades_por_mes[mes_menor_cantidad]
 
-# * Ruta para la página de préstamos
+    # Calcular producto más y menos vendidos
+    productos_vendidos_info = calcular_productos_vendidos(stock)
+    
+    # Calcular usuario con mayor y menor ventas
+    ventas_usuarios_info = calcular_ventas_por_usuario(stock)
+
+    return render_template(
+        '/admin/home.html',
+        productos=productos_filtrados,
+        usuarios=usuarios,
+        stock=stock,
+        cantidad_productos_menores=cantidad_productos_menores,
+        total_productos=total_productos,
+        mes_mayor_total=mes_mayor_total,
+        total_mayor=total_mayor,
+        mes_menor_cantidad=mes_menor_cantidad,
+        cantidad_menor=cantidad_menor,
+        producto_mas_vendido=productos_vendidos_info['producto_mas_vendido'],
+        cantidad_mas_vendida=productos_vendidos_info['cantidad_mas_vendida'],
+        producto_menos_vendido=productos_vendidos_info['producto_menos_vendido'],
+        cantidad_menos_vendida=productos_vendidos_info['cantidad_menos_vendida'],
+        usuario_mayor_ventas=ventas_usuarios_info['usuario_mayor_ventas'],
+        total_mayor_ventas=ventas_usuarios_info['total_mayor_ventas'],
+        usuario_menor_ventas=ventas_usuarios_info['usuario_menor_ventas'],
+        total_menor_ventas=ventas_usuarios_info['total_menor_ventas'],
+        
+    )
+
+
+# Funcion para home del producto que mayor se ha vendido y menor que se ha vendido
+def calcular_productos_vendidos(stock):
+    productos_vendidos = defaultdict(int)
+    
+    # Sumar las cantidades por cada producto
+    for item in stock:
+        productos_vendidos[item['producto']] += int(item['cantidad'])
+    
+    # Determinar el producto más vendido y el menos vendido
+    producto_mas_vendido = max(productos_vendidos, key=productos_vendidos.get)
+    cantidad_mas_vendida = productos_vendidos[producto_mas_vendido]
+    producto_menos_vendido = min(productos_vendidos, key=productos_vendidos.get)
+    cantidad_menos_vendida = productos_vendidos[producto_menos_vendido]
+    
+    return {
+        "producto_mas_vendido": producto_mas_vendido,
+        "cantidad_mas_vendida": cantidad_mas_vendida,
+        "producto_menos_vendido": producto_menos_vendido,
+        "cantidad_menos_vendida": cantidad_menos_vendida
+    }
+
+#Usuario que tiene mayor venta y usuario que tiene menor venta
+def calcular_ventas_por_usuario(stock):
+    ventas_por_usuario = defaultdict(float)
+    
+    # Sumar los totales por cada usuario
+    for item in stock:
+        ventas_por_usuario[item['usuario']] += float(item['total'])
+    
+    # Determinar el usuario con mayor y menor ventas
+    usuario_mayor_ventas = max(ventas_por_usuario, key=ventas_por_usuario.get)
+    total_mayor_ventas = ventas_por_usuario[usuario_mayor_ventas]
+    usuario_menor_ventas = min(ventas_por_usuario, key=ventas_por_usuario.get)
+    total_menor_ventas = ventas_por_usuario[usuario_menor_ventas]
+    
+    return {
+        "usuario_mayor_ventas": usuario_mayor_ventas,
+        "total_mayor_ventas": total_mayor_ventas,
+        "usuario_menor_ventas": usuario_menor_ventas,
+        "total_menor_ventas": total_menor_ventas
+    }
+
+
+
 @app.route('/user/in_prestamo')
 def in_prestamo_user():  # Cambia el nombre de la función
     if 'username' not in session:

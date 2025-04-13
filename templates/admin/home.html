@@ -1,148 +1,424 @@
 {% extends "admin/layout.html" %}
 {% block content %}
 <!-- /. ROW  -->
-<div class="row">
-    <div class="col-md-6">
-        <!--   Kitchen Sink -->
-        <div class="panel panel-default">
-            <input type="number" id="b_stock" class="form-control" placeholder="ingresar la cantidad de stock que deseas revisar">
-            
-            <div class="panel-heading">
-                Bajo Stock
+
+<div class="">
+    <div class="dashboard">
+        <!-- Metrics Row -->
+        <div class="metrics">
+            <div class="metric-card total-sales">
+                <div class="metric-title">Comprar productos </div>
+                <div class="metric-value">{{ cantidad_productos_menores }}</div>
+                <div class="metric-change">
+                    <span class="positive">Total de productos : {{ total_productos }} </span>
+                    <span class="positive"></span>
+                </div>
             </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" id="myTable">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Cantidad actual</th>
-                                <th>Comprar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for producto in productos %}
-                            <tr>
-                                <td>
-                                    {{producto.n_producto}}
-                                </td>
-                                <td class="cantidad">
-                                    {{producto.cantidad}}
-                                </td>
-                                <td>
-                                    <p class="mostrar" ></p>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+
+            <div class="metric-card total-orders">
+                <div class="metric-title">Mayor venta</div>
+                <div class="metric-value">{{ mes_mayor_total }}</div>
+                <div class="metric-change">
+                    <span class="positive">Total : {{ total_mayor }} $ </span>
+                    <span class="positive"></span>
+                </div>
+            </div>
+            <div class="metric-card refunded">
+                <div class="metric-title">Menor venta</div>
+                <div class="metric-value">{{ mes_menor_cantidad }}</div>
+                <div class="metric-change">
+                    <span class="negative">Total : {{ cantidad_menor }} $</span>
+                    <span class="negative"></span>
                 </div>
             </div>
         </div>
-        <!-- End  Kitchen Sink -->
-    </div>
-    <div class="col-md-6">
-        <!--   Basic Table  -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Reporte de venta mensuales de producto
+
+        <!-- Charts Row -->
+        <div class="charts">
+            <!-- Revenue Stats -->
+            <div class="chart-container">
+
+                <table class="table" hidden>
+                    <thead>
+                        <tr>
+                            <th>Nombre del producto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for productos in productos %}
+                        <tr>
+
+                            <td>{{ productos.n_producto }}</td>
+                            <td>{{ productos.cantidad }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="chart-header">
+
+
+                    <h3 class="chart-title">Tabla Productos</h3>
+                    <br>
+                    <div class="time-selector2">Mayor a menor</div>
+                </div>
+                <canvas id="revenueChart"></canvas>
             </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table" id="myTable2">
+
+            <!-- Sales by Category -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <table class="table" id="ventas">
                         <thead>
                             <tr>
                                 <th>Fecha</th>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>PVP</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for sto in stock %}
+                            {% for stock in stock %}
                             <tr>
-                                <td>{{sto.fecha}}</td>
-                                <td>{{sto.producto}}</td>
-                                <td class="valor1">{{sto.cantidad}}</td>
-                                <td class="valor2">{{sto.precio}}</td>
+                                <td>{{ stock.fecha }}</td>
+                                <td>{{ stock.total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <h3 class="chart-title">Ventas</h3>
+                    <div class="time-selector">Mayor venta y menor venta</div>
+                </div>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="">
+    <div class="dashboard">
+        <!-- Metrics Row -->
+        <div class="metrics">
+            <div class="metric-card total-sales">
+                <div class="metric-title">Producto más vendido</div>
+                <div class="metric-value">{{ producto_mas_vendido }}</div>
+                <div class="metric-change">
+                    <span class="positive">Cantidad: {{ cantidad_mas_vendida }}</span>
+
+                </div>
+            </div>
+            <div class="metric-card visitor">
+                <div class="metric-title">Producto menos vendido</div>
+                <div class="metric-value">{{ producto_menos_vendido }}</div>
+                <div class="metric-change">
+                    <span class="positive">Cantidad : {{ cantidad_menos_vendida }}</span>
+
+                </div>
+            </div>
+            <div class="metric-card total-orders">
+                <div class="metric-title">Usuario con mayor ventas</div>
+                <div class="metric-value"> {{ usuario_mayor_ventas }} </div>
+                <div class="metric-change">
+                    <span class="positive">{{ total_mayor_ventas }} $</span>
+
+                </div>
+            </div>
+            <div class="metric-card refunded">
+                <div class="metric-title">Usuario con menor ventas</div>
+                <div class="metric-value">{{ usuario_menor_ventas }}</div>
+                <div class="metric-change">
+                    <span class="negative">Total de ventas: {{ total_menor_ventas }} $</span>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts">
+            <!-- Revenue Stats -->
+            <div class="chart-container">
+                <table class="table" id="producto2" hidden>
+                    <thead>
+                        <tr>
+                            <td>
+                                Nombre del producto
+                            </td>
+                            <td>
+                                Cantidad del producto
+                            </td>
+                        </tr>
+                    <tbody>
+                        {% for mayor in stock %}
+                        <tr>
+                            <td>{{ mayor.producto }}</td>
+                            <td>{{ mayor.cantidad }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                    </thead>
+                </table>
+                <div class="chart-header">
+                    <h3 class="chart-title">Producto vendidos</h3>
+                    <div class="time-selector">Mayor y menor</div>
+                </div>
+                <canvas id="productovendido"></canvas>
+            </div>
+
+            <!-- Sales by Category -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <table class="table" id="vendido2" hidden>
+                        <thead>
+                            <tr>
                                 <td>
-                                    <p class="total"></p>
+                                    Fecha
+                                </td>
+                                <td>
+                                    Usuario
+                                </td>
+                                <td>
+                                    Total
                                 </td>
                             </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- End  Basic Table  -->
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <!--    Striped Rows Table  -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Reporte de salida de productos mensuales 
-            </div>
-            <div class="panel-body">
-                <div  >
-                    <table  class="table" id="myTable3">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Producto</th>
-                                <th>Salida</th>
-                            </tr>
-                        </thead>
                         <tbody>
-                            {% for stock in stocki %}
+                            {% for venta in stock %}
                             <tr>
-                                <td class="fecha">{{stock.fecha}}</td>
-                                <td class="producto">{{stock.producto}}</td>
-                                <td class="cantidad2">{{stock.cantidad}}</td>
+                                <td>{{ venta.fecha }}</td>
+                                <td>{{ venta.usuario }}</td>
+                                <td>{{ venta.total }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!--  End  Striped Rows Table  -->
-    </div>
-    <div class="col-md-6">
-        <!--    Striped Rows Table  -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Reporte de ventas mensuales por usuario 
-            </div>
-            <div class="panel-body">
-                <div>
-                    <table  class="table" id="myTable5">
-                        <thead>
-                            <tr>
-                                <th>Mes</th>
-                                <th>Usuario</th>
-                                <th>Valor</th>
-                            </tr>
+
                         </thead>
-                        <tbody>
-                            {% for stop in stop %}
-                            <tr>
-                                <td class="">{{stop.fecha}}</td>
-                                <td class="">{{stop.total}}</td>
-                                <td class="">{{stop.usuario}}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
                     </table>
+                    <h3 class="chart-title">Ventas de usuarios</h3>
+                    <div class="time-selector">Valores en dolares</div>
                 </div>
+                <canvas id="ventavendida"></canvas>
             </div>
         </div>
-        <!--  End  Striped Rows Table  -->
     </div>
+
+
 </div>
+
+<script>
+    // Obtener todas las filas de la tabla de productos
+    const filasProductos = document.querySelectorAll("#producto2 tbody tr");
+
+    // Arrays para almacenar los nombres y cantidades de productos
+    const nombresProductos = [];
+    const cantidadesProductos = [];
+
+    // Iterar por las filas de la tabla
+    filasProductos.forEach((filaProducto) => {
+        const nombreProducto = filaProducto.querySelector("td:nth-child(1)").textContent.trim();
+        const cantidadProducto = parseInt(filaProducto.querySelector("td:nth-child(2)").textContent);
+
+        nombresProductos.push(nombreProducto);
+        cantidadesProductos.push(cantidadProducto);
+    });
+
+    // Encontrar el producto más y menos vendido
+    let maxCantidad = 0;
+    let minCantidad = Infinity;
+    let productoMasVendido = '';
+    let productoMenosVendido = '';
+
+    for (let i = 0; i < nombresProductos.length; i++) {
+        if (cantidadesProductos[i] > maxCantidad) {
+            maxCantidad = cantidadesProductos[i];
+            productoMasVendido = nombresProductos[i];
+        }
+        if (cantidadesProductos[i] < minCantidad) {
+            minCantidad = cantidadesProductos[i];
+            productoMenosVendido = nombresProductos[i];
+        }
+    }
+
+    // Actualizar la información de más y menos vendido
+    document.querySelector('.chart-container .time-selector').textContent =
+        `Más vendido: ${productoMasVendido} (${maxCantidad}) | Menos vendido: ${productoMenosVendido} (${minCantidad})`;
+
+    // Generar colores aleatorios para cada barra
+    const coloresBarras = nombresProductos.map(() => {
+        const r = Math.floor(Math.random() * 200) + 55;
+        const g = Math.floor(Math.random() * 200) + 55;
+        const b = Math.floor(Math.random() * 200) + 55;
+        return `rgba(${r}, ${g}, ${b}, 0.7)`;
+    });
+
+    // Crear el gráfico de barras
+    const ctxProductos = document.getElementById('productovendido').getContext('2d');
+
+    const chartProductos = new Chart(ctxProductos, {
+        type: 'bar',
+        data: {
+            labels: nombresProductos,
+            datasets: [{
+                label: 'Cantidad vendida',
+                data: cantidadesProductos,
+                backgroundColor: coloresBarras,
+                borderColor: coloresBarras.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cantidad'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false // Oculta la leyenda ya que solo hay un dataset
+                },
+                title: {
+                    display: true,
+                    text: ''
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `Cantidad: ${context.raw}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script>
+    // Obtener filas de la tabla de ventas por usuario
+    const filasVentas = document.querySelectorAll("#vendido2 tbody tr");
+
+    // Objeto para almacenar los totales por mes y usuario
+    const ventasPorMesUsuario = {};
+
+    // Iterar por las filas de la tabla
+    filasVentas.forEach((filaVenta) => {
+        const fechaStr = filaVenta.querySelector("td:nth-child(1)").textContent.trim();
+        const usuario = filaVenta.querySelector("td:nth-child(2)").textContent.trim();
+        const total = parseInt(filaVenta.querySelector("td:nth-child(3)").textContent);
+
+        // Convertir fecha a objeto Date
+        const fechaVenta = new Date(fechaStr);
+        // Obtener el nombre del mes en español
+        const nombreMes = fechaVenta.toLocaleString("es-ES", { month: "long" });
+        // Capitalizar primera letra del mes
+        const mesCapitalizado = nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+
+        // Crear la clave combinada mes-usuario
+        const clave = `${mesCapitalizado} - ${usuario}`;
+
+        // Sumar el total a la clave correspondiente
+        if (ventasPorMesUsuario[clave]) {
+            ventasPorMesUsuario[clave] += total;
+        } else {
+            ventasPorMesUsuario[clave] = total;
+        }
+    });
+
+    // Crear arrays para etiquetas y datos del gráfico
+    const etiquetasMesUsuario = Object.keys(ventasPorMesUsuario);
+    const datosVentasMesUsuario = Object.values(ventasPorMesUsuario);
+
+    // Generar colores aleatorios para cada segmento del pie
+    const coloresPie = etiquetasMesUsuario.map(() => {
+        const rPie = Math.floor(Math.random() * 200) + 55;
+        const gPie = Math.floor(Math.random() * 200) + 55;
+        const bPie = Math.floor(Math.random() * 200) + 55;
+        return `rgba(${rPie}, ${gPie}, ${bPie}, 0.7)`;
+    });
+
+    // Calcular el total general para mostrar en el selector de tiempo
+    const totalGeneral = datosVentasMesUsuario.reduce((sum, value) => sum + value, 0);
+    document.querySelector('.chart-header .time-selector').textContent =
+        `Valores en dólares: Total $${totalGeneral}`;
+
+    // Crear tabla oculta con los datos agrupados (opcional)
+    const nuevaTablaMesUsuario = document.createElement("table");
+    nuevaTablaMesUsuario.classList.add("table");
+    nuevaTablaMesUsuario.id = "ventas-mes-usuario";
+    nuevaTablaMesUsuario.style.display = "none"; // Ocultar la tabla
+    nuevaTablaMesUsuario.innerHTML = `
+    <thead>
+        <tr>
+            <th>Mes - Usuario</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        ${Object.entries(ventasPorMesUsuario)
+            .map(
+                ([mesUsuario, total]) => `
+                <tr>
+                    <td>${mesUsuario}</td>
+                    <td>${total}</td>
+                </tr>
+            `
+            )
+            .join("")}
+    </tbody>
+`;
+
+    // Agregar la tabla oculta al DOM (si se desea mantener los datos)
+    document.querySelector("#vendido2").insertAdjacentElement('afterend', nuevaTablaMesUsuario);
+
+    // Crear el gráfico de tipo pie
+    const ctxVentasUsuarios = document.getElementById('ventavendida').getContext('2d');
+
+    const chartVentasUsuarios = new Chart(ctxVentasUsuarios, {
+        type: 'pie',
+        data: {
+            labels: etiquetasMesUsuario,
+            datasets: [{
+                data: datosVentasMesUsuario,
+                backgroundColor: coloresPie,
+                borderColor: coloresPie.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                title: {
+                    display: true,
+                    text: ''
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: $${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+<script src="/static/js/admin/dasbhohard.js">
+</script>
 <script src="/static/js/admin/home.js"></script>
 <script src="/static/js/admin/home2.js"></script>
 <script src="/static/js/admin/home3.js"></script>
