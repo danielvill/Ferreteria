@@ -147,9 +147,8 @@ def v_cliente(id):
         return redirect(url_for('stock.index'))
     cliente = db['stock'].find_one({"_id": ObjectId(id)})
     usuario = db['usuarios'].find_one({"user": cliente["usuario"]})
-    return render_template("admin/acta.html", cliente=cliente , usuario=usuario)
-
-
+    
+    return render_template("admin/acta.html", cliente=cliente, usuario=usuario)
 
 
 # *Generar pdf

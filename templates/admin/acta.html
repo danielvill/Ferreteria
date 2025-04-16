@@ -54,10 +54,8 @@
 <body>
     <h1>Acta pertenece : {{ cliente.usuario }} </h1>
     <div class="date">{{ cliente.fecha }}</div>
-    
-    
+    <img src="{{ url_for('static', filename='img/' + usuario.imagen) }}" alt="Imagen del Usuario" class="img-fluid" style="max-width: 200px; height: auto;">
     <hr>
-
     <h2>Nombre del producto </h2>
     <ul>
         <li>{{ cliente.producto }}</li>
