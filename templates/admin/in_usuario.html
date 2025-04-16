@@ -14,7 +14,7 @@
             </div>
             <div class="panel-body">
 
-                <form action="/admin/in_usuario" method="post">
+                <form action="/admin/in_usuario" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Ingresar cedula</label>
                         <input class="form-control" type="number" name="cedula"  oninput="limitarEntrada()" name="cedula"/>
@@ -40,8 +40,11 @@
                             <option value="secretario">Secretario</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Ingresar imagen</label>
+                        <input class="form-control" type="file" name="imagen" />
+                    </div>
                     <button type="submit" class="btn btn-info">Enviar</button>
-
                 </form>
             </div>
         </div>

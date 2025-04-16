@@ -1,10 +1,28 @@
-from flask import Blueprint, render_template, request, flash, session, redirect, url_for
+from flask import Blueprint, render_template, request, flash, session, redirect, url_for,current_app,send_file
 from controllers.database import Conexion as dbase
 from modules.usuarios import Usuario
 from pymongo import MongoClient
+import os
+from werkzeug.utils import secure_filename
 
 db = dbase()
 usuarios = Blueprint('usuarios', __name__)
+
+# Esta ruta es para las imagenes
+@usuarios.route('/alguna_ruta')
+def alguna_funcion():
+    UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+    
+# codigo de verificacion de herramientas con las imagenes
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+#Este codigo es para las  imagenes
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
 
 @usuarios.route('/admin/in_usuario', methods=['GET', 'POST'])
 def inuser():
@@ -20,7 +38,7 @@ def inuser():
         correo = request.form['correo']
         contraseña = request.form['contraseña']
         rol = request.form['rol']  # ✅ NUEVO: capturamos el rol
-
+        
         exist_cedula = usuarios.find_one({"cedula": cedula})
         exist_user = usuarios.find_one({"user": user})
         exist_correo = usuarios.find_one({"correo": correo})
@@ -35,8 +53,18 @@ def inuser():
             flash("El correo ya existe")
             return redirect(url_for('usuarios.inuser'))
         else:
+
             # ✅ NUEVO: pasamos el rol al constructor
-            usuario = Usuario(cedula, user, correo, contraseña, rol)
+            if  "imagen" not in request.files:
+                    flash('No file part')
+                    return redirect(request.url)
+            file = request.files['imagen']
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                imagen_filename = os.path.join('img', filename)
+            usuario = Usuario(cedula, user, correo, contraseña, rol,filename)
             usuarios.insert_one(usuario.UsuarioDBCollection())
             flash("Enviado a la base de datos")
             return redirect(url_for('usuarios.inuser'))

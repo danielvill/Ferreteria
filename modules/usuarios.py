@@ -1,10 +1,11 @@
 class Usuario:
-    def __init__(self, cedula,user,correo,contraseña, rol="usuario"):
+    def __init__(self, cedula,user,correo,contraseña, rol,imagen):
         self.cedula=cedula
         self.user=user
         self.correo=correo
         self.contraseña=contraseña
         self.rol = rol
+        self.imagen=imagen
         
 
     def UsuarioDBCollection(self):
@@ -13,5 +14,6 @@ class Usuario:
             "user":self.user,
             "correo":self.correo,
             "contraseña":self.contraseña,
-            "rol": self.rol
+            "rol": self.rol,
+            "imagen":self.imagen
         }

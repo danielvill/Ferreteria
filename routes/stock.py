@@ -14,7 +14,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, Paragraph, TableStyle, Spacer ,Image
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet ,ParagraphStyle
-
+from bson import ObjectId
 
 
 db = dbase()
@@ -138,6 +138,18 @@ def v_stock():
     stock = db['stock'].find()
     producto = db["productos"].find()
     return render_template('admin/stock.html', stock=stock)
+
+# Visualizar detalles del cliente por ID y que se pueda revisar 
+@stock.route("/admin/stock/<id>")
+def v_cliente(id):
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('stock.index'))
+    cliente = db['stock'].find_one({"_id": ObjectId(id)})
+    usuario = db['usuarios'].find_one({"user": cliente["usuario"]})
+    return render_template("admin/acta.html", cliente=cliente , usuario=usuario)
+
+
 
 
 # *Generar pdf

@@ -24,6 +24,9 @@ import locale
 db = dbase()
 app = Flask(__name__)
 app.secret_key = 'Ferre14526'
+app.config['UPLOAD_FOLDER'] = 'D:/ferreteria/static/img'
+
+
 
 @app.context_processor
 def inject_user_role():
