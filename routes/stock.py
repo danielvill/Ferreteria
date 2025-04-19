@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template, request,jsonify, flash, session, redirect, url_for , json ,send_file
+from flask import Blueprint, render_template, request,jsonify, flash, session, redirect, url_for , json ,send_file,make_response
 from controllers.database import Conexion as dbase
 from modules.stock import Stock
 from pymongo import MongoClient
@@ -15,7 +15,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, Paragraph, TableStyle, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet ,ParagraphStyle
 from bson import ObjectId
-
+from io import BytesIO
 
 db = dbase()
 
@@ -58,11 +58,12 @@ def instock():
             cantidad = request.form.get("cantidad")
             total = request.form["total"]
             usuario = request.form.get("usuario")
-        
+            comentario = request.form.get("comentario")
+            
             documentos = []  # Lista para guardar los documentos
     
-            if fecha and producto and id_producto and c_producto and precio and cantidad and total and usuario:
-                    stoc = Stock( st_id,fecha, producto, id_producto,c_producto, precio,cantidad, total,usuario)
+            if fecha and producto and id_producto and c_producto and precio and cantidad and total and usuario and comentario:
+                    stoc = Stock( st_id,fecha, producto, id_producto,c_producto, precio,cantidad, total,usuario,comentario)
                     documentos.append(stoc.StockDBCollection())  # Agrega el documento a la lista
                     
                     # Actualiza la cantidadidad en la tabla "productos"
@@ -139,6 +140,9 @@ def v_stock():
     producto = db["productos"].find()
     return render_template('admin/stock.html', stock=stock)
 
+# Generar
+
+
 # Visualizar detalles del cliente por ID y que se pueda revisar 
 @stock.route("/admin/stock/<id>")
 def v_cliente(id):
@@ -149,6 +153,88 @@ def v_cliente(id):
     usuario = db['usuarios'].find_one({"user": cliente["usuario"]})
     
     return render_template("admin/acta.html", cliente=cliente, usuario=usuario)
+
+
+# Generar el pdf del usuario que de clic al icono de vista
+@stock.route("/admin/generar_pdf/<id>", methods=["POST"])
+def generar_pdf(id):
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('stock.index'))
+    
+    # Obtener datos del cliente
+    cliente = db['stock'].find_one({"_id": ObjectId(id)})
+    usuario = db['usuarios'].find_one({"user": cliente["usuario"]})
+    
+    # Crear un buffer para el PDF
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    story = []
+
+    # Estilos
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    subtitle_style = styles['Heading2']
+    normal_style = styles['BodyText']
+   
+    # Agrega la imagen
+    imagen = Image('static/img/logo.jpg', width=100, height=100)
+    imagen.hAlign = 'CENTER'
+    story.append(imagen)
+    story.append(Spacer(1, 12))
+
+    
+    
+
+    # Subtítulo
+    story.append(Paragraph(f"Acta pertenece a: {cliente['usuario']}", subtitle_style))
+    story.append(Spacer(1, 12))
+
+    # Fecha
+    from datetime import datetime
+    fecha_hora = datetime.now().strftime("Documento generado el %d/%m/%Y a las %H:%M")
+    story.append(Paragraph(fecha_hora, normal_style))
+    story.append(Spacer(1, 24))
+
+    # Tabla con los datos del cliente
+    data = [
+        ["Campo", "Valor"],
+        ["Usuario", cliente['usuario']],
+        ["Fecha", cliente['fecha']],
+        ["Nombre del Producto", cliente['producto']],
+        ["Comentario", cliente['comentario']],
+        ["Precio", f"${cliente['precio']}"],
+        ["Cantidad", cliente['cantidad']],
+        ["Total", f"${cliente['total']}"]
+    ]
+
+    # Estilo de la tabla
+    table = Table(data, colWidths=[150, 300])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    story.append(table)
+    story.append(Spacer(1, 24))
+
+    # Pie de página
+    story.append(Paragraph("Este documento es generado automáticamente por el sistema.", normal_style))
+
+    # Generar el PDF
+    doc.build(story)
+
+    # Preparar la respuesta HTTP con el PDF
+    buffer.seek(0)
+    response = make_response(buffer.read())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = f'attachment; filename=acta_{cliente["_id"]}.pdf'
+    return response
 
 
 # *Generar pdf

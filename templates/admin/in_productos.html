@@ -20,7 +20,7 @@
             Ingreso de Productos
         </div>
         <div class="panel-body" class="">
-            <form action="/admin/in_productos"  method="post" >
+            <form action="/admin/in_productos"  method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Ingresar nombre del producto</label>
                     <input class="form-control " type="text" name="n_producto" />
@@ -39,7 +39,15 @@
                 </div>
                 <div class="form-group">
                     <label>Ingresar Marca</label>
-                    <input class="form-control" type="text" name="marca"/>
+                    <select class="form-control" name="marca" id="marca">
+                        <option value="Bosch">Bosch</option>
+                        <option value="Dolmar">Dolmar</option>
+                        <option value="Felo">Felo</option>
+                        <option value="Cortag">Cortag</option>
+                        <option value="Alba">Alba</option>
+                        <option value="Sima">Sima</option>
+                        <option value="Praima">Praima</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Ingresar Color</label>
@@ -57,6 +65,11 @@
                     <label>Ingresar PVP</label>
                     <input class="form-control" type="text" name="pvp" id="pvp" />
                 </div>
+                <div class="form-group">
+                    <label>Ingresar Imagen</label>
+                    <input class="form-control" type="file" name="imagen" id="imagen" />
+                </div>
+
                 <button type="submit" class="btn btn-info">Enviar</button>
             </form>
         </div>

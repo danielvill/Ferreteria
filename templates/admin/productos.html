@@ -19,23 +19,24 @@
         <table  class="table table-bordered table-hover" id="myTable">
             <thead>
                 <tr>
-                    <th>Codigo</th>
+                    <th hidden>Codigo</th>
                     <th>Nombre del producto</th>
                     <th>Descripcion</th>
                     <th>Cantidad</th>
                     <th>Categoria</th>
                     <th>Marca</th>
-                    <th>Color</th>
+                    <th hidden>Color</th>
                     <th>Medida</th>
-                    <th>CV</th>
+                    <th hidden>CV</th>
                     <th>PVP</th>
+                    <th>Imagen</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos %}
                 <tr>
-                    <td>
+                    <td hidden>
                         {{producto.id_producto}}
                     </td>
 
@@ -54,17 +55,21 @@
                     <td>
                         {{producto.marca}}
                     </td>
-                    <td>
+                    <td hidden>
                         {{producto.color}}
                     </td>
                     <td>
                         {{producto.medida}}
                     </td>
-                    <td>
+                    <td hidden>
                         {{producto.cv}}
                     </td>
                     <td>
                         {{producto.pvp}}
+                    </td>
+                    <td>
+                        <!-- Asegúrate de incluir la subcarpeta 'img' si es necesario -->
+                        <img src="{{ url_for('static', filename='img/' + producto.imagen) }}" alt="Imagen de usuario" width="300">
                     </td>
                     <td>
                         <button type="submit" class="editar btn btn-primary">

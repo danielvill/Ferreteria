@@ -1,5 +1,5 @@
 class Producto:
-    def __init__(self,id_producto,n_producto,descripcion,cantidad,categoria,marca,color,medida,cv,pvp):
+    def __init__(self,id_producto,n_producto,descripcion,cantidad,categoria,marca,color,medida,cv,pvp,imagen):
         self.id_producto=id_producto
         self.n_producto=n_producto
         self.descripcion=descripcion
@@ -10,6 +10,8 @@ class Producto:
         self.medida=medida
         self.cv=cv
         self.pvp=pvp
+        self.imagen=imagen
+
         
 
 
@@ -25,5 +27,6 @@ class Producto:
             "medida":self.medida,
             "cv":self.cv,
             "pvp":self.pvp,
+            "imagen":self.imagen
             
         }

@@ -36,6 +36,7 @@ def inuser():
         cedula = request.form['cedula']
         user = request.form['user']
         correo = request.form['correo']
+        direccion = request.form['direccion']
         contraseña = request.form['contraseña']
         rol = request.form['rol']  # ✅ NUEVO: capturamos el rol
         
@@ -64,7 +65,7 @@ def inuser():
                 file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
                 imagen_filename = os.path.join('img', filename)
-            usuario = Usuario(cedula, user, correo, contraseña, rol,filename)
+            usuario = Usuario(cedula, user, correo, direccion,contraseña, rol,filename)
             usuarios.insert_one(usuario.UsuarioDBCollection())
             flash("Enviado a la base de datos")
             return redirect(url_for('usuarios.inuser'))

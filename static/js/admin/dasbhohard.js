@@ -140,6 +140,9 @@ document.querySelector('.time-selector').textContent =
 // Crear el gráfico de doughnut
 const ctx2 = document.getElementById('categoryChart').getContext('2d');
 
+ctx.canvas,width = 450;
+ctx.canvas.height = 450;
+
 // Extraer los datos para el gráfico
 const meses = Object.keys(totalesPorMes).map(mes => mes.charAt(0).toUpperCase() + mes.slice(1));
 const totales = Object.values(totalesPorMes);
@@ -165,7 +168,8 @@ const myChart = new Chart(ctx2, {
         }]
     },
     options: {
-        responsive: true,
+        responsive: false,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',

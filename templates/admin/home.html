@@ -56,14 +56,17 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <div class="chart-header">
+                <div class="chart-header" >
 
 
                     <h3 class="chart-title">Tabla Productos</h3>
                     <br>
                     <div class="time-selector2">Mayor a menor</div>
                 </div>
-                <canvas id="revenueChart"></canvas>
+                <br>
+                <br>
+                <br>
+                <canvas id="revenueChart"  ></canvas>
             </div>
 
             <!-- Sales by Category -->
@@ -88,7 +91,9 @@
                     <h3 class="chart-title">Ventas</h3>
                     <div class="time-selector">Mayor venta y menor venta</div>
                 </div>
-                <canvas id="categoryChart"></canvas>
+                <br>
+                
+                <canvas id="categoryChart" ></canvas>
             </div>
         </div>
     </div>
@@ -162,6 +167,9 @@
                     <h3 class="chart-title">Producto vendidos</h3>
                     <div class="time-selector">Mayor y menor</div>
                 </div>
+                <br>
+                <br>
+                <br>
                 <canvas id="productovendido"></canvas>
             </div>
 
@@ -196,6 +204,7 @@
                     <h3 class="chart-title">Ventas de usuarios</h3>
                     <div class="time-selector">Valores en dolares</div>
                 </div>
+                
                 <canvas id="ventavendida"></canvas>
             </div>
         </div>
@@ -252,7 +261,7 @@
 
     // Crear el gráfico de barras
     const ctxProductos = document.getElementById('productovendido').getContext('2d');
-
+    
     const chartProductos = new Chart(ctxProductos, {
         type: 'bar',
         data: {
@@ -266,6 +275,8 @@
             }]
         },
         options: {
+            // Dimensiones de los graficos
+
             responsive: true,
             scales: {
                 y: {
@@ -380,6 +391,8 @@
 
     // Crear el gráfico de tipo pie
     const ctxVentasUsuarios = document.getElementById('ventavendida').getContext('2d');
+    ctxVentasUsuarios.canvas.width = 400; // Ancho del gráfico
+    ctxVentasUsuarios.canvas.height = 400; // Alto del gráfico
 
     const chartVentasUsuarios = new Chart(ctxVentasUsuarios, {
         type: 'pie',
@@ -393,13 +406,16 @@
             }]
         },
         options: {
-            responsive: true,
+            // Dimensiones de los graficos
+            responsive: false, // Tener en false para controlar manualmente el tamaño
+            maintainAspectRatio: false, // Este permite las dimensiones que le pongas
             plugins: {
                 legend: {
                     position: 'right',
+                    
                 },
                 title: {
-                    display: true,
+                    display: false,
                     text: ''
                 },
                 tooltip: {

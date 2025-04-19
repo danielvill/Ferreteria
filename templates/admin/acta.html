@@ -64,6 +64,14 @@
 
     <hr>
 
+    <h2>Comentario</h2>
+    <ul>
+        <li>{{ cliente.comentario }}</li>
+
+    </ul>
+
+    <hr>
+
     <h2>Precio</h2>
     <ul>
         <li>{{ cliente.precio }}</li>
@@ -86,7 +94,12 @@
     </ul>
     <hr>
 
-    <a href="/admin/stock" class="btn btn-info">Regresar</a>
+    <form action="/admin/generar_pdf/{{ cliente._id }}" method="post">
+        <a href="/admin/stock" class="btn btn-info">Regresar</a>
+    
+        <button type="submit" class="btn btn-primary">Generar PDF</button>
+    </form>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             let fechaElemento = document.querySelector(".date");

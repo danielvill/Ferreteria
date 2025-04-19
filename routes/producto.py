@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, session, redirect, url_for,send_file
+from flask import Blueprint, render_template, request, flash, session, redirect, url_for,current_app,send_file
 from controllers.database import Conexion as dbase
 from modules.productos import Producto
 from pymongo import MongoClient
@@ -10,6 +10,10 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, Paragraph, TableStyle, Spacer ,Image
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet ,ParagraphStyle
+import os
+from werkzeug.utils import secure_filename
+
+
 
 db = dbase()
 producto = Blueprint('producto', __name__)
@@ -31,6 +35,19 @@ def get_next_sequence(name):
     )
     return result.get('seq')
 
+@producto.route('/alguna_ruta')
+def alguna_funcion():
+    UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+    
+# codigo de verificacion de herramientas con las imagenes
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+#Este codigo es para las  imagenes
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 # Funcion de Ingreso de productos
 @producto.route('/admin/in_productos',methods=['GET','POST'])
 def inproduc():
@@ -50,6 +67,8 @@ def inproduc():
             medida = request.form ["medida"]
             cv = request.form ["cv"]
             pvp = request.form ["pvp"]
+            imagen = request.files["imagen"]
+
             exist_id_producto = producto.find_one({"id_producto":id_producto})
             exist_n_producto = producto.find_one ({"n_producto":n_producto})
             
@@ -60,7 +79,18 @@ def inproduc():
                 flash("Ese nombre del producto ya existe")
                 return redirect(url_for("producto.inproduc"))
             else:
-                prod = Producto(id_producto,n_producto,descripcion,cantidad,categoria,marca,color,medida,cv,pvp)
+                # ✅ Este es el apartado de las imagenes
+                if  "imagen" not in request.files:
+                        flash('No file part')
+                        return redirect(request.url)
+                file = request.files['imagen']
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(file_path)
+                    imagen_filename = os.path.join('img', filename)
+
+                prod = Producto(id_producto,n_producto,descripcion,cantidad,categoria,marca,color,medida,cv,pvp,filename)
                 producto.insert_one(prod.ProductoDBCollection())
                 flash("Producto agregado con exito")
                 return redirect(url_for("producto.inproduc"))
