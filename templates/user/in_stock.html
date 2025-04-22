@@ -88,11 +88,9 @@
                 <label for="">Total</label>
                 <input type="text" name="total" class="form-control total" readonly>
                 <label for="">Selecciona al usuario</label>
-                <select name="usuario" class="form-control">
-                    {% for user in usuarios %}
-                        <option value="{{ user }}">{{ user }}</option>
-                    {% endfor %}
-                </select>                
+                <input type="text" value="{{ usuario }}" name="usuario" class="form-control" readonly>                
+                <label for="">Ingresar Comentario</label>
+                <textarea class="form-control" type="text" name="comentario" id="comentario" value=" "></textarea> 
                 <br>
                 <br>
                 <button type="submit" class="btn btn-info">Enviar</button>

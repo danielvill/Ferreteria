@@ -49,11 +49,13 @@ def ustock():
             cantidad = request.form.get("cantidad")
             total = request.form["total"]
             usuario = request.form.get("usuario")
+            comentario = request.form.get("comentario")
+            
 
             documentos = []
 
-            if fecha and producto and id_producto and c_producto and precio and cantidad and total and usuario:
-                stoc = Stock(st_id, fecha, producto, id_producto, c_producto, precio, cantidad, total, usuario)
+            if fecha and producto and id_producto and c_producto and precio and cantidad and total and usuario and comentario:
+                stoc = Stock(st_id, fecha, producto, id_producto, c_producto, precio, cantidad, total, usuario,comentario)
                 documentos.append(stoc.StockDBCollection())
 
                 nueva_cantidad = int(c_producto) - int(cantidad)
