@@ -16,6 +16,7 @@
                     <th>Usuario</th>
                     <th>Correo</th>
                     <th>Direccion</th>
+                    <th>Rol</th>
                     <th>Imagen</th>
                     <th>Acciones</th>
                 </tr>
@@ -35,6 +36,9 @@
                     </td>
                     <td>
                         {{user.direccion}}
+                    </td>
+                    <td>
+                        {{user.rol}}
                     </td>
                     <td>
                         <!-- Asegúrate de incluir la subcarpeta 'img' si es necesario -->
@@ -81,6 +85,14 @@
             <div class="col">
                 <label for="rol">Correo</label>
                 <input type="text" id="correo" name="correo" class="form-control">
+            </div>
+            <div class="col" >
+                <label for="rol">Direccion</label>
+                <input type="text" id="direccion" name="direccion" class="form-control">
+            </div>
+            <div class="col" hidden>
+                <label for="rol">Rol</label>
+                <input type="text" id="rol" name="rol" class="form-control">
             </div>
         </div>
     </form>

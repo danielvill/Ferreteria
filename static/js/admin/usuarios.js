@@ -15,7 +15,9 @@ $(document).ready(function () {
         $('#cedula').val(data[0]);
         $('#user').val(data[1]);
         $('#correo').val(data[2]);
-        $('#editForm').attr('action','/edit_us/'+ data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+        $('#direccion').val(data[3]);
+        $('#rol').val(data[4]);
+        $('#editForm').attr('action','/edit_user/'+ data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
         $('#editModal').dialog('open');
     });
     // Inicializar el modal

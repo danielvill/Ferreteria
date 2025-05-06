@@ -1,5 +1,5 @@
 class Usuario:
-    def __init__(self, cedula,user,direccion,correo,contraseña, rol,imagen):
+    def __init__(self, cedula,user,correo,direccion,contraseña, rol,imagen):
         self.cedula=cedula
         self.user=user
         self.correo=correo

@@ -75,19 +75,21 @@ def inuser():
 
 
 # Editar Usuario
-@usuarios.route('/edit_us/<string:edaduser>', methods=['GET', 'POST'])
+@usuarios.route('/edit_user/<string:edaduser>', methods=['GET', 'POST'])
 def edit_user(edaduser):
     usuario = db['usuarios']
     cedula = request.form['cedula']
     user = request.form['user']
     correo = request.form['correo']
+    direccion = request.form['direccion']
     rol = request.form['rol']
 
-    if cedula and correo and user:
+    if cedula and correo and user and direccion and rol:
         usuario.update_one({'cedula': edaduser}, {
             '$set': {
                 'cedula': cedula,
                 'correo': correo,
+                'direccion': direccion,
                 'user': user,
                 'rol': rol  # ✅ actualiza el rol también
             }
